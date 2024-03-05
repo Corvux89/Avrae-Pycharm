@@ -189,13 +189,48 @@ class SettingsMenu(tk.Frame):
         tk.Entry(self, textvariable=self.collection_id, width=30).grid(row=0,column=1,columnspan=4, padx=5, pady=5)
 
         # Buttons
-        tk.Button(self, text="Pull New Collection Data", command=self.get_collection_data).grid(row=1,column=0, padx=5, pady=10)
-        tk.Button(self, text="Update Existing Collection", command=self.update_collection).grid(row=1, column=2, padx=5,pady=10)
-        tk.Button(self, text="Pull GVAR", command=lambda: controller.show_frame('GVAR')).grid(row=1, column=3, padx=5,
+        tk.Button(self, text="Pull New Collection Data", command=self.get_collection_data, width=20).grid(row=1,column=0, padx=5, pady=10)
+        tk.Button(self, text="Update Existing Collection", command=self.update_collection, width=20).grid(row=1, column=1, padx=5,pady=10)
+        tk.Button(self, text="Import entire collection", command=self.import_collection, width=20).grid(row=2, column=0, pady=10, padx=5)
+        tk.Button(self, text="Pull GVAR", command=lambda: controller.show_frame('GVAR'), width=20).grid(row=2, column=1, padx=5,
                                                                                                 pady=10)
 
-        tk.Button(self, text="Update Secret Key", command=lambda: controller.show_frame("AvraeSecret"))\
-            .grid(row=2, column=0, padx=5, pady=10, columnspan=3, sticky='w')
+    def import_collection(self):
+        file = filedialog.askopenfile(mode='r',
+                                      title='Select collection file',
+                                      initialdir=os.path.abspath(os.path.join(sys.argv[1], os.pardir)),
+                                      filetypes=ioFileTypes,
+                                      defaultextension=ioFileTypes)
+
+        if not file:
+            return
+        collection = json.load(file)
+
+        for name, alias_id in collection.get('aliases', {}).items():
+            get = AvraeRest("GET", f"workshop/alias/{alias_id}")
+            alias_data = json.loads(get.text)['data']
+            with open(os.path.join(os.path.dirname(file.name), f"{name}.alias"), mode="w+",
+                      encoding="utf-8") as outfile:
+                outfile.write("".join(alias_data['code']).replace('\r', ''))
+                if len(alias_data['docs']) > 0:
+                    with open(os.path.join(os.path.dirname(file.name), f"{name}.md"), mode="w+",
+                              encoding="utf-8") as outfile:
+                        outfile.write("".join(alias_data['docs']).replace('\r', ''))
+
+            print(f"{name} [{alias_id}] - Imported")
+
+        for name, snippet_id in collection.get('snippets', {}).items():
+            get = AvraeRest("GET", f"workshop/snippet/{snippet_id}")
+            snippet_data = json.loads(get.text)['data']
+            with open(os.path.join(os.path.dirname(file.name), f"{name}.snippet"), mode="w+",
+                      encoding="utf-8") as outfile:
+                outfile.write("".join(snippet_data['code']).replace('\r', ''))
+            if len(snippet_data['docs']) > 0:
+                with open(os.path.join(os.path.dirname(file.name), f"{name}.md"), mode="w+",
+                          encoding="utf-8") as outfile:
+                    outfile.write("".join(snippet_data['docs']).replace('\r', ''))
+            print(f"{name} [{alias_id}] - Imported")
+        self.controller.destroy()
 
     def update_collection(self):
         file = filedialog.askopenfile(mode='r',
