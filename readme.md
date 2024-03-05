@@ -29,7 +29,9 @@ Now that you have the `collection.id` anytime you run this updator in the direct
 ## Updating 
 When working within a collection file, if this application is set to the default configuration you can hit `shift + f10` to run it. It will prompt for what you want to do.
 
-1. Push Update -> Select this or hit `1` to push an update. It will handle checking if this is a snippet, alias, or markdown descriptions for an alias, snippet, or 
+1. Push Update -> Select this or hit `1` to push an update. It will handle checking if this is a snippet, alias, or markdown descriptions for an alias, snippet, or the collection itself 
+2. Pull Update -> Update the selected file with the latest version of infomration on the Workshop. This will update both the code file as well as the markdown file if applicable
+3. Pull Description
 
 
 #### Folder Structure
