@@ -19,20 +19,25 @@ In order for this plugin to have your permissions to grab and update your GVARs,
 ### Note
 Please keep this token private, as anyone who gains access to this token could potentially gain access to your Discord account.
 
-### Get Collection Information
+## Features
+
+#### Get Collection Information
 You can use the ``Pull New Collection Data`` button to collect a json of all of the aliases and snippets ids within a collection. This expects the collection ID. You can find this by going to the collection on the Workshop, and looking at the url. Everything after ``avrae.io/dashboard/workshop/`` is your ID.
 
 Once you've ran the ``Pull New Collection Data`` command, save the result as `collection.id` in the folder you wish to save your collection in. This will also automatically download the collection description if the collection has one and save it in a `readme.md`
 
 Now that you have the `collection.id` anytime you run this updator in the directory it resides, it will assume we are working with this collection.
 
-## Updating 
+#### Updating 
 When working within a collection file, if this application is set to the default configuration you can hit `shift + f10` to run it. It will prompt for what you want to do.
 
 1. Push Update -> Select this or hit `1` to push an update. It will handle checking if this is a snippet, alias, or markdown descriptions for an alias, snippet, or the collection itself 
-2. Pull Update -> Update the selected file with the latest version of infomration on the Workshop. This will update both the code file as well as the markdown file if applicable
-3. Pull Description
+2. Pull Update -> Select this or hit '2' to update the selected file with the latest version of information on the Workshop. Works with snippets, aliases, gvars, and markdown files
 
+`Pull Alias` -> Will prompt you to select an alias to download. This will create a `.alias` and `.md` file
+`Pull Snippet` -> Will prompt you to select a snippet to download. This will create a `.alias` and `.md` file
+`Pull GVAR` -> Will prompt you to select a GVAR to download. This will create a `.alias` and `.md` file
+`Main Menu` -> Back to the initial setup screen where you can either pull a new collection, or update the current `collection.io` file
 
 #### Folder Structure
 Support for editing the documentation will come in a future update.
@@ -42,15 +47,15 @@ Here is an example collection folder structure:
 root
  | # This is the folder your collection will live in
  ├ Collection Name
- | | # This contains the json collected by the `Pull New Collection Data` command
+ | | # This contains the json collected by the `Get Collection Data` command
  | ├ collection.id 
  | | # This contains the markdown for the collection description
  | ├ readme.md 
- | | # This contains the alias itself
- | ├ aliasName.alias 
  | | # This contains the alias itself, collected by the `Get Workshop Alias` command, and updated with the `Update Workshop Alias` command
- | ├ aliasName.md 
+ | ├ aliasName.alias 
  | | # This contains the markdown the alias description
+ | ├ aliasName.md 
+ | | # This contains the subalias alias itself, collected by the `Get Workshop Alias` command, and updated with the `Update Workshop Alias` command
  | ├ aliasName subAalias.alias 
  | | # This contains the markdown the alias description
  | ├ aliasName subAalias.md 
