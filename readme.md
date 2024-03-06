@@ -7,6 +7,8 @@ This package makes a remote connection to the Avrae API in order to collect and 
 ## Setup
 In order for this plugin to have your permissions to grab and update your GVARs, Workshop Aliases, or Workshop Snippets, you need to give it your token.
 
+Working with Git
+
 1. Setup a run configuration in PyCharm to run the ``avrae.py`` file
 2. Go to [Avrae](https://avrae.io) and log in to the dashboard
 3. Press F12 to open the DevTools
