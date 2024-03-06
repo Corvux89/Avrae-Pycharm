@@ -333,6 +333,8 @@ class GVAR(tk.Frame):
         else:
             messagebox.showerror(title="Error", message=f"Invalid GVAR ID")
 
+        self.controller.destroy()
+
 class SnippetSelect(tk.Frame):
     def __init__(self, master, controller, *args, **kwargs):
         tk.Frame.__init__(self, master)

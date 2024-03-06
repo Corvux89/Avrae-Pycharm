@@ -12,8 +12,9 @@ It is recommended to use Git to get this project, otherwise you will need to dow
 To download this application
 1. Open the terminal in PyCharm and type ``git submodule add https://github.com/Corvux89/Avrae-Pycharm <optional_submodule_path>``. If you don't specify the submodule path it will just add it to the root directory.
 2. Add a configuration to run `app.py`.
-![PyCharm Configuration](https://i.imgur.com/o7h4TIO.png)
 3. Ensure you have the parameter of `$FilePath$`
+![PyCharm Configuration](https://i.imgur.com/o7h4TIO.png)
+
 #### Environment Variables
 | Name              | Description                                                                     | Required? |
 |-------------------|---------------------------------------------------------------------------------|-----------|
@@ -32,7 +33,7 @@ In order for this plugin to have your permissions to grab and update your GVARs,
 
 #### Updating the project
 In the future if there are updates to the application you want to get you can either copy/paste or run
-`git submodule update --remote --merge` to pull from my primary github repo
+`git submodule update --remote --merge` to pull updates from github
 
 ### Note
 Please keep this token private, as anyone who gains access to this token could potentially gain access to your Discord account.
