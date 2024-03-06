@@ -44,6 +44,10 @@ class MainWindow(tk.Tk):
         y = int((screen_height / 2) - (height / 1.5))
         return f"{width}x{height}+{x}+{y}"
 
+def run():
+    app = MainWindow(500, 200)
+    app.mainloop()
+
 
 if __name__ == "__main__":
     app = MainWindow(500, 200)
