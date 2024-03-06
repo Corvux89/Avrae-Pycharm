@@ -5,19 +5,34 @@ A runnable configuration for [Pycharm](https://www.jetbrains.com/pycharm/) for t
 This package makes a remote connection to the Avrae API in order to collect and update the information. It only does this by request, and will not make any outward connection without being prompted to by the user.
 
 ## Setup
-In order for this plugin to have your permissions to grab and update your GVARs, Workshop Aliases, or Workshop Snippets, you need to give it your token.
 
-Working with Git
+### Getting the Application
+It is recommended to use Git to get this project, otherwise you will need to download and add the project to the repo you manage your aliases in.
+
+To download this application
+1. Open the terminal in PyCharm and type ``git submodule add https://github.com/Corvux89/Avrae-Pycharm <optional_submodule_path>``. If you don't specify the submodule path it will just add it to the root directory.
+2. Add a configuration to run `app.py`.
+![PyCharm Configuration](https://i.imgur.com/o7h4TIO.png)
+3. Ensure you have the parameter of `$FilePath$`
+#### Environment Variables
+| Name              | Description                                                                     | Required? |
+|-------------------|---------------------------------------------------------------------------------|-----------|
+| `AVRAE_TOKEN`     | Secret Avrae token for discord                                                  | **Yes**   |
+|`FILE_DEPTH`       | How many levels of directories to look through to find the `collection.io` file | No        |
+
+#### Getting the AVRAE_TOKEN
+In order for this plugin to have your permissions to grab and update your GVARs, Workshop Aliases, or Workshop Snippets, you need to give it your token.
 
 1. Setup a run configuration in PyCharm to run the ``avrae.py`` file
 2. Go to [Avrae](https://avrae.io) and log in to the dashboard
 3. Press F12 to open the DevTools
 4. Go to the 'Application' tab
 5. On the left, select 'https://avrae.io' under 'Local Storage'
-6. Copy the 'Value' next to the 'avrae-token' key
-7. In your PyCharm run configuration or OS variables set a variable names ``AVRAE_TOKEN`` to the copied value
-8. In your Pycharm run configuration setup a ``$FilePath$`` in your Parameters
-9. Optional: You can set a configuration variable called ``FILE_DEPTH`` to a the depth you want to check for `collection.io` file. This is used when launching the application telling it how many parent directories up from the current ``$FilePath`` to search. Ex: If you have a subfolder in your collection to track GVARs, you would want to set the ``FILE_DEPTH`` to 2. 
+6. Copy the 'Value' next to the 'AVRAE_TOKEN' key
+
+#### Updating the project
+In the future if there are updates to the application you want to get you can either copy/paste or run
+`git submodule update --remote --merge` to pull from my primary github repo
 
 ### Note
 Please keep this token private, as anyone who gains access to this token could potentially gain access to your Discord account.

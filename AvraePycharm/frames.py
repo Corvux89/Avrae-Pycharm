@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, ttk
-from utils import *
+from .utils import *
 
 
 ioFileTypes = [('Collection Files', '*.io'), ('All Files', '*.*')]

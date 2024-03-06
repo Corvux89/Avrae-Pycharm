@@ -1,5 +1,5 @@
 from tkinter import font
-from frames import *
+from .frames import *
 class MainWindow(tk.Tk):
     def __init__(self, width, height, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)

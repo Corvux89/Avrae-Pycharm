@@ -1,0 +1,3 @@
+import AvraePycharm
+
+AvraePycharm.run()
