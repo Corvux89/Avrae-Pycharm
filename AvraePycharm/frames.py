@@ -274,7 +274,7 @@ class SettingsMenu(tk.Frame):
             out.write(json.dumps(id_dict, indent=2))
             out.close()
             if len(collection.get('description', '')) > 0:
-                with open(os.path.join(os.path.dirname(out.name), f"readme.md"), mode="w+", encoding="utf-8") as outfile:
+                with open(os.path.join(os.path.dirname(out.name), f"../readme.md"), mode="w+", encoding="utf-8") as outfile:
                     outfile.write(collection.get('description',""))
 
     def find_sub_aliases(self, alias: dict, out: dict, curName: str):
