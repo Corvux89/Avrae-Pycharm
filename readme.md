@@ -13,6 +13,7 @@ To download this application
 1. Open the terminal in PyCharm and type ``git submodule add https://github.com/Corvux89/Avrae-Pycharm <optional_submodule_path>``. If you don't specify the submodule path it will just add it to the root directory.
 2. Add a configuration to run `app.py`.
 3. Ensure you have the parameter of `$FilePath$`
+
 ![PyCharm Configuration](https://i.imgur.com/o7h4TIO.png)
 
 #### Environment Variables
