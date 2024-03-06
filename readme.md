@@ -15,6 +15,7 @@ In order for this plugin to have your permissions to grab and update your GVARs,
 6. Copy the 'Value' next to the 'avrae-token' key
 7. In your PyCharm run configuration or OS variables set a variable names ``AVRAE_TOKEN`` to the copied value
 8. In your Pycharm run configuration setup a ``$FilePath$`` in your Parameters
+9. Optional: You can set a configuration variable called ``FILE_DEPTH`` to a the depth you want to check for `collection.io` file. This is used when launching the application telling it how many parent directories up from the current ``$FilePath`` to search. Ex: If you have a subfolder in your collection to track GVARs, you would want to set the ``FILE_DEPTH`` to 2. 
 
 ### Note
 Please keep this token private, as anyone who gains access to this token could potentially gain access to your Discord account.
