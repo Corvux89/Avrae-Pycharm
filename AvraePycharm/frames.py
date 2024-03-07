@@ -149,8 +149,6 @@ class QuickMenu(tk.Frame):
                 post = AvraeRest("POST", f"/customizations/gvars/{gvar_id.group(0)}", gvar)
                 if post.status_code in [200, 201]:
                     messagebox.showinfo(title="GVAR Updated", message=f"Successfully update GVAR: {gvar_id.group(0)}")
-                else:
-                    messagebox.showerror(title="Error", message=f"Error updating GVAR")
             else:
                 messagebox.showerror(title="Error", message=f"Invalid GVAR ID")
 
@@ -247,35 +245,38 @@ class SettingsMenu(tk.Frame):
             self.get_collection_data(file)
 
     def get_collection_data(self, out = None):
-        get = AvraeRest("GET", f"workshop/collection/{self.collection_id.get()}/full")
-        collection = json.loads(get.text)['data']
-        id_dict = {"name": collection['name'],
-                   "collection": self.collection_id.get(),
-                   "aliases": {},
-                   "snippets": {}}
+        if self.collection_id.get() != "":
+            get = AvraeRest("GET", f"workshop/collection/{self.collection_id.get()}/full")
+            collection = json.loads(get.text)['data']
+            id_dict = {"name": collection['name'],
+                       "collection": self.collection_id.get(),
+                       "aliases": {},
+                       "snippets": {}}
 
-        for alias in collection.get('aliases', []):
-            self.find_sub_aliases(alias, id_dict,"")
+            for alias in collection.get('aliases', []):
+                self.find_sub_aliases(alias, id_dict,"")
 
-        for snippet in collection.get('snippets', []):
-            id_dict['snippets'][snippet.get('name')] = snippet.get('_id')
+            for snippet in collection.get('snippets', []):
+                id_dict['snippets'][snippet.get('name')] = snippet.get('_id')
 
-        if not out:
-            out = filedialog.asksaveasfile(initialdir=os.path.abspath(os.path.join(os.getcwd(), os.pardir)),
-                                           mode='w',
-                                           filetypes=ioFileTypes,
-                                           defaultextension=ioFileTypes,
-                                           initialfile='collection.io')
+            if not out:
+                out = filedialog.asksaveasfile(initialdir=os.path.abspath(os.path.join(os.getcwd(), os.pardir)),
+                                               mode='w',
+                                               filetypes=ioFileTypes,
+                                               defaultextension=ioFileTypes,
+                                               initialfile='collection.io')
+            else:
+                f = out.name
+                out.close()
+                out = open(f, mode='w+')
+            if out:
+                out.write(json.dumps(id_dict, indent=2))
+                out.close()
+                if len(collection.get('description', '')) > 0:
+                    with open(os.path.join(os.path.dirname(out.name), f"../readme.md"), mode="w+", encoding="utf-8") as outfile:
+                        outfile.write(collection.get('description',""))
         else:
-            f = out.name
-            out.close()
-            out = open(f, mode='w+')
-        if out:
-            out.write(json.dumps(id_dict, indent=2))
-            out.close()
-            if len(collection.get('description', '')) > 0:
-                with open(os.path.join(os.path.dirname(out.name), f"../readme.md"), mode="w+", encoding="utf-8") as outfile:
-                    outfile.write(collection.get('description',""))
+            messagebox.showerror(title="Error", message="Please provide a collection id")
 
     def find_sub_aliases(self, alias: dict, out: dict, curName: str):
         curName = f"{curName} {alias['name']}".strip()

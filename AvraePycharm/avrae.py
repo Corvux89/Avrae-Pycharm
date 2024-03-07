@@ -27,6 +27,8 @@ class MainWindow(tk.Tk):
             self.destroy()
         elif len(self.collection) > 0:
             self.show_frame('QuickMenu')
+        elif UUID_PATTERN.search(os.path.splitext(os.path.basename(sys.argv[1]))[0]):
+            self.show_frame('QuickMenu')
         else:
             self.show_frame("SettingsMenu")
 

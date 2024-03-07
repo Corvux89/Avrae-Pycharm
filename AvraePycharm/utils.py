@@ -81,7 +81,7 @@ def AvraeRest(type: str, endpoint: str, payload = None):
         print(f"Succesfully {type.upper()} to {endpoint}")
     else:
         print(f"Unsuccessful {type.upper()} to {endpoint}. Error code {request.status_code} - {request.text}")
-        messagebox.showerror(title=f"Error {request.status_code}", message=f"{json.loads(request.text)['error']}")
+        messagebox.showerror(title=f"Error {request.status_code}", message=f"{json.loads(request.text)['error'] if' error' in request.text else request.text}")
     return request
 
 
