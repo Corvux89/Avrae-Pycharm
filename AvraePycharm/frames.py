@@ -41,51 +41,41 @@ class QuickMenu(tk.Frame):
     def pull_update(self, *args):
         if not self.is_topmost:
             return
+
+        path = os.path.dirname(sys.argv[1])
+
         if alias_id := self.controller.collection.get('aliases', {}).get(self.name, None):
             get = AvraeRest("GET", f"workshop/alias/{alias_id}")
             alias_data = json.loads(get.text)['data']
             if self.ext.lower() == '.alias':
-                with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.name}.alias"), mode="w+",
-                          encoding="utf-8") as outfile:
-                    outfile.write("".join(alias_data['code']).replace('\r', ''))
+                putFileContent(os.path.join(path,f"{self.name}.alias"), "".join(alias_data["code"]).replace("\r", ""))
             elif len(alias_data['docs']) > 0 and self.ext.lower() == '.md':
-                with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.name}.md"), mode="w+",
-                          encoding="utf-8") as outfile:
-                    outfile.write("".join(alias_data['docs']).replace('\r', ''))
-            messagebox.showinfo(title="Alias Saved", message=f"Alias Sucessfully saved!")
+                putFileContent(os.path.join(path, f"{self.name}.md"), "".join(alias_data["docs"]).replace("\r", ""))
+            messagebox.showinfo(title="Alias Saved", message=f"Alias Successfully saved!")
 
         elif snippet_id := self.controller.collection.get('snippets', {}).get(self.name, None):
                 get = AvraeRest("GET", f"workshop/snippet/{snippet_id}")
                 snippet_data = json.loads(get.text)['data']
 
                 if self.ext.lower() == '.snippet':
-                    with open(os.path.join(os.path.dirname(sys.argv[1]), f"{snippet_data['name']}.snippet"), mode="w+",
-                              encoding="utf-8") as outfile:
-                        outfile.write("".join(snippet_data['code']).replace('\r', ''))
+                    putFileContent(os.path.join(path, f"{self.name}.snippet"), "".join(snippet_data['code']).replace('\r', ''))
                 elif len(snippet_data['docs']) > 0 and self.ext.lower() == '.md':
-                    with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.name}.md"), mode="w+",
-                              encoding="utf-8") as outfile:
-                        outfile.write("".join(snippet_data['docs']).replace('\r', ''))
-                messagebox.showinfo(title="Snippet Saved", message=f"Snippet Sucessfully saved!")
+                    putFileContent(os.path.join(path, f"{self.name}.md"), "".join(snippet_data['docs']).replace('\r', ''))
+                messagebox.showinfo(title="Snippet Saved", message=f"Snippet Successfully saved!")
 
         elif self.name == "readme":
             get = AvraeRest("GET", f"workshop/collection/{self.controller.collection.get('collection','')}/full")
             collection = json.loads(get.text)['data']
-
-            with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.name}.md"), mode="w+", encoding="utf-8") as outfile:
-                outfile.write(collection.get('description', ''))
-            messagebox.showinfo(title="Readme Saved", message=f"Colleciton Readme Sucessfully saved!")
+            putFileContent(os.path.join(path, f"{self.name}.md"), collection.get('description', ''))
+            messagebox.showinfo(title="Readme Saved", message=f"Collection Readme Successfully saved!")
 
         elif self.ext.lower() in ['.json', '.gvar']:
             if gvar_id := UUID_PATTERN.search(self.name):
                 get = AvraeRest("GET", f"/customizations/gvars/{gvar_id.group(0)}")
                 if get.status_code in [200, 201]:
                     gvar = json.loads(get.text)
-                    with open(sys.argv[1], mode="w+", encoding="utf-8") as outfile:
-                        outfile.write(gvar['value'])
+                    putFileContent(sys.argv[1], gvar['value'])
                     messagebox.showinfo(title="GVAR Loaded", message=f"Successfully loaded GVAR: {gvar_id.group(0)}")
-                else:
-                    messagebox.showerror(title="Error", message=f"Error getting GVAR")
             else:
                 messagebox.showerror(title="Error", message=f"Invalid GVAR ID")
         else:
@@ -203,31 +193,27 @@ class SettingsMenu(tk.Frame):
         if not file:
             return
         collection = json.load(file)
+        path = os.path.dirname(file.name)
 
         for name, alias_id in collection.get('aliases', {}).items():
             get = AvraeRest("GET", f"workshop/alias/{alias_id}")
             alias_data = json.loads(get.text)['data']
-            with open(os.path.join(os.path.dirname(file.name), f"{name}.alias"), mode="w+",
-                      encoding="utf-8") as outfile:
-                outfile.write("".join(alias_data['code']).replace('\r', ''))
-                if len(alias_data['docs']) > 0:
-                    with open(os.path.join(os.path.dirname(file.name), f"{name}.md"), mode="w+",
-                              encoding="utf-8") as outfile:
-                        outfile.write("".join(alias_data['docs']).replace('\r', ''))
+            putFileContent(os.path.join(path, f"{name}.alias"), "".join(alias_data['code']).replace('\r', ''))
+
+            if len(alias_data['docs']) > 0:
+                putFileContent(os.path.join(path, f"{name}.md"), "".join(alias_data['docs']).replace('\r', ''))
 
             print(f"{name} [{alias_id}] - Imported")
 
         for name, snippet_id in collection.get('snippets', {}).items():
             get = AvraeRest("GET", f"workshop/snippet/{snippet_id}")
             snippet_data = json.loads(get.text)['data']
-            with open(os.path.join(os.path.dirname(file.name), f"{name}.snippet"), mode="w+",
-                      encoding="utf-8") as outfile:
-                outfile.write("".join(snippet_data['code']).replace('\r', ''))
+            putFileContent(os.path.join(path, f"{name}.snippet"), "".join(snippet_data['code']).replace('\r', ''))
+
             if len(snippet_data['docs']) > 0:
-                with open(os.path.join(os.path.dirname(file.name), f"{name}.md"), mode="w+",
-                          encoding="utf-8") as outfile:
-                    outfile.write("".join(snippet_data['docs']).replace('\r', ''))
-            print(f"{name} [{alias_id}] - Imported")
+                putFileContent(os.path.join(path, f"{name}.md"), "".join(snippet_data['docs']).replace('\r', ''))
+
+            print(f"{name} [{snippet_id}] - Imported")
         self.controller.destroy()
 
     def update_collection(self):
@@ -243,6 +229,8 @@ class SettingsMenu(tk.Frame):
         if 'collection' in collection:
             self.collection_id = tk.StringVar(value=collection['collection'])
             self.get_collection_data(file)
+
+        self.controller.destroy()
 
     def get_collection_data(self, out = None):
         if self.collection_id.get() != "":
@@ -265,18 +253,14 @@ class SettingsMenu(tk.Frame):
                                                filetypes=ioFileTypes,
                                                defaultextension=ioFileTypes,
                                                initialfile='collection.io')
-            else:
-                f = out.name
-                out.close()
-                out = open(f, mode='w+')
+
             if out:
-                out.write(json.dumps(id_dict, indent=2))
-                out.close()
+                putFileContent(out.name, json.dumps(id_dict, indent=2))
                 if len(collection.get('description', '')) > 0:
-                    with open(os.path.join(os.path.dirname(out.name), f"../readme.md"), mode="w+", encoding="utf-8") as outfile:
-                        outfile.write(collection.get('description',""))
+                    putFileContent(os.path.join(os.path.dirname(out.name), f"readme.md"), collection.get('description', ''))
         else:
             messagebox.showerror(title="Error", message="Please provide a collection id")
+
 
     def find_sub_aliases(self, alias: dict, out: dict, curName: str):
         curName = f"{curName} {alias['name']}".strip()
@@ -327,8 +311,7 @@ class GVAR(tk.Frame):
                     out = os.path.join(os.path.dirname(sys.argv[1]),f"{gvar_id.group(0)}.gvar")
 
             if out:
-                with open(out, mode='w+', encoding='utf-8') as outfile:
-                    outfile.write(gvar_data)
+                putFileContent(out, gvar_data)
                 messagebox.showinfo(title="GVAR Saved", message=f"GVAR Sucessfully saved!")
                 self.entry.delete(0, 'end')
         else:
@@ -353,17 +336,20 @@ class SnippetSelect(tk.Frame):
             .grid(row=1, column=0,pady=10, padx=5)
         tk.Button(self, text="Pull",
                   command=self.pull_snippet, width=20) \
-            .grid(row=1, column=1,pady=10, padx=5)
+            .grid(row=1, column=1, pady=10, padx=5)
 
     def pull_snippet(self):
         snippet_id = self.controller.collection.get('snippets', {}).get(self.snippet.get(), "")
         get = AvraeRest("GET", f"workshop/snippet/{snippet_id}")
+        path = os.path.dirname(sys.argv[1])
         snippet_data = json.loads(get.text)['data']
-        with open(os.path.join(os.path.dirname(sys.argv[1]), f"{snippet_data['name']}.snippet"),mode="w+", encoding="utf-8") as outfile:
-            outfile.write("".join(snippet_data['code']).replace('\r',''))
+        putFileContent(os.path.join(path, f"{self.snippet.get()}.snippet"),
+                       "".join(snippet_data['code']).replace('\r', ''))
+
         if len(snippet_data['docs']) > 0:
-            with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.snippet.get()}.md"), mode="w+",encoding="utf-8") as outfile:
-                outfile.write("".join(snippet_data['docs']).replace('\r', ''))
+            putFileContent(os.path.join(path, f"{self.snippet.get()}.md"),
+                           "".join(snippet_data['docs']).replace('\r', ''))
+
         messagebox.showinfo(title="Snippet Saved", message=f"Snippet Sucessfully saved!")
         self.controller.destroy()
 
@@ -389,11 +375,15 @@ class AliasSelect(tk.Frame):
     def pull_alias(self):
         alias_id = self.controller.collection.get('aliases', {}).get(self.alias.get(), "")
         get = AvraeRest("GET", f"workshop/alias/{alias_id}")
+        path = os.path.dirname(sys.argv[1])
         alias_data = json.loads(get.text)['data']
-        with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.alias.get()}.alias"),mode="w+", encoding="utf-8") as outfile:
-            outfile.write("".join(alias_data['code']).replace('\r',''))
-            if len(alias_data['docs']) > 0:
-                with open(os.path.join(os.path.dirname(sys.argv[1]), f"{self.alias.get()}.md"), mode="w+", encoding="utf-8") as outfile:
-                    outfile.write("".join(alias_data['docs']).replace('\r',''))
+
+        putFileContent(os.path.join(path, f"{self.alias.get()}.alias"),
+                       "".join(alias_data['code']).replace('\r',''))
+
+        if len(alias_data['docs']) > 0:
+            putFileContent(os.path.join(path, f"{self.alias.get()}.md"),
+                           "".join(alias_data['docs']).replace('\r',''))
+
         messagebox.showinfo(title="Alias Saved", message=f"Alias Sucessfully saved!")
         self.controller.destroy()

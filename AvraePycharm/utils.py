@@ -24,7 +24,7 @@ def getCollection():
         return collection_io, dir
 
     for i in range(0, depth):
-        if len(collection_io) == 0:
+        if len(collection_io) == 0 and file_dir!= "":
             file_dir = os.path.dirname(file_dir)
             collection_io, file_dir = find_collection(file_dir)
         else:
@@ -48,6 +48,10 @@ def getFileContent(file):
         out = ''.join(f.readlines())
 
     return out
+
+def putFileContent(file, content):
+    with open(file, mode="w+", encoding="utf-8") as outfile:
+        outfile.write(content)
 
 def flatten_json(nested_json):
    flattened_json = {}
@@ -91,3 +95,5 @@ def isJSON(str):
     except:
         return False
     return True
+
+
